@@ -130,9 +130,9 @@ def decode_map_features_from_proto(map_features):
 
             map_infos['speed_bump'].append(cur_info)
 
-        else:
-            print(cur_data)
-            raise ValueError
+        # else:
+        #     print(cur_data)
+        #     raise ValueError
 
         polylines.append(cur_polyline)
         cur_info['polyline_index'] = (point_cnt, point_cnt + len(cur_polyline))
@@ -208,7 +208,7 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
     return ret_infos
 
 
-def get_infos_from_protos(data_path, output_path=None, num_workers=8):
+def get_infos_from_protos(data_path, output_path=None, num_workers=4):
     from functools import partial
     if output_path is not None:
         os.makedirs(output_path, exist_ok=True)
@@ -228,7 +228,7 @@ def get_infos_from_protos(data_path, output_path=None, num_workers=8):
     return all_infos
 
 
-def create_infos_from_protos(raw_data_path, output_path, num_workers=16):
+def create_infos_from_protos(raw_data_path, output_path, num_workers=4):
     train_infos = get_infos_from_protos(
         data_path=os.path.join(raw_data_path, 'training'),
         output_path=os.path.join(output_path, 'processed_scenarios_training'),
