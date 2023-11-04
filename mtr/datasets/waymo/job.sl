@@ -4,7 +4,6 @@
 #SBATCH --ntasks=4
 #SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=6GB
-#SBATCH --mem=16G
 
 #SBATCH --time=15:00:00
 #SBATCH --output=gs.out
