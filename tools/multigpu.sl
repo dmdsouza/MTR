@@ -9,7 +9,7 @@
 #SBATCH --output=trial.out
 #SBATCH --error=trial.err
 #SBATCH --partition=gpu
-#SBATCH --gres=gpu:p100:8
+#SBATCH --gpus-per-task=2
 
 module purge 
 module load gcc/11.3.0
@@ -24,4 +24,4 @@ source ~/.bashrc
 
 mamba activate mtr_test
 
-bash scripts/torchrun_train.sh 8 --cfg_file cfgs/waymo/mtr+100_percent_data.yaml --batch_size 80 --epochs 30 --extra_tag my_second_exp
+bash scripts/torchrun_train.sh 2 --cfg_file cfgs/waymo/mtr+100_percent_data.yaml --batch_size 20 --epochs 30 --extra_tag my_second_exp
