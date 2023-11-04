@@ -6,8 +6,8 @@
 #SBATCH --mem-per-cpu=6GB
 
 #SBATCH --time=01:00:00
-#SBATCH --output=gs.out
-#SBATCH --error=gs.err
+#SBATCH --output=trial.out
+#SBATCH --error=trial.err
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:p100:8
 
