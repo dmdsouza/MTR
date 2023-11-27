@@ -1,7 +1,7 @@
 import os
 from typing import List, Dict, Tuple, Optional, Any
 import sys
-sys.path.insert(0, '/scratch1/dmdsouza/waymo-od/src')
+sys.path.insert(0, '/scratch1/dmdsouza/MTR/waymo-od/src')
 import numpy as np
 import tensorflow as tf
 
