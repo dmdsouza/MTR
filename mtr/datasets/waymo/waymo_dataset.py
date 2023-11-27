@@ -14,6 +14,14 @@ from mtr.datasets.dataset import DatasetTemplate
 from mtr.utils import common_utils
 from mtr.config import cfg
 
+import sys
+sys.path.insert(0, '/scratch1/dmdsouza/MTR/waymo-od/src')
+
+from waymo_open_dataset import dataset_pb2
+from waymo_open_dataset.protos import scenario_pb2
+from waymo_open_dataset.protos import compressed_lidar_pb2
+from waymo_open_dataset.utils import womd_lidar_utils
+
 
 class WaymoDataset(DatasetTemplate):
     def __init__(self, dataset_cfg, training=True, logger=None):
