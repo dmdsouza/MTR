@@ -15,6 +15,8 @@ from tqdm import tqdm
 from waymo_open_dataset.protos import scenario_pb2
 from waymo_types import object_type, lane_type, road_line_type, road_edge_type, signal_state, polyline_type
 
+physical_devices = tf.config.experimental.list_physical_devices('GPU')
+tf.config.experimental.set_memory_growth(physical_devices[0], True)
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
   # Restrict TensorFlow to only use the first GPU
@@ -25,8 +27,7 @@ if gpus:
   except RuntimeError as e:
     # Visible devices must be set before GPUs have been initialized
     print(e)
-physical_devices = tf.config.experimental.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
 
 from waymo_open_dataset import dataset_pb2
 from waymo_open_dataset.protos import scenario_pb2
