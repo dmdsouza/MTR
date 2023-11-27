@@ -25,6 +25,8 @@ if gpus:
   except RuntimeError as e:
     # Visible devices must be set before GPUs have been initialized
     print(e)
+physical_devices = tf.config.experimental.list_physical_devices('GPU')
+tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 from waymo_open_dataset import dataset_pb2
 from waymo_open_dataset.protos import scenario_pb2
