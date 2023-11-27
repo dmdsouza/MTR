@@ -3,7 +3,8 @@
 # Written by Shaoshuai Shi 
 # All Rights Reserved
 
-
+import sys
+sys.path.insert(0, '/scratch1/dmdsouza/MTR/waymo-od/src')
 import sys, os
 import numpy as np
 import pickle
@@ -14,8 +15,7 @@ from tqdm import tqdm
 from waymo_open_dataset.protos import scenario_pb2
 from waymo_types import object_type, lane_type, road_line_type, road_edge_type, signal_state, polyline_type
 
-import sys
-sys.path.insert(0, '/scratch1/dmdsouza/MTR/waymo-od/src')
+
 
 from waymo_open_dataset import dataset_pb2
 from waymo_open_dataset.protos import scenario_pb2
