@@ -188,13 +188,13 @@ def _get_laser_calib(
   return None
 
 def _extract_point_clouds(scenario_augmented):
-    gpus = tf.config.experimental.list_physical_devices('GPU')
-    if gpus:
-        try:
-            tf.config.experimental.set_virtual_device_configuration(
-                gpus[0],[tf.config.experimental.VirtualDeviceConfiguration(memory_limit=5120)])
-        except RuntimeError as e:
-            print(e)
+    # gpus = tf.config.experimental.list_physical_devices('GPU')
+    # if gpus:
+    #     try:
+    #         tf.config.experimental.set_virtual_device_configuration(
+    #             gpus[0],[tf.config.experimental.VirtualDeviceConfiguration(memory_limit=5120)])
+    #     except RuntimeError as e:
+    #         print(e)
     frame_points_xyz = {}  # map from frame indices to point clouds
     frame_points_feature = {}
     frame_i = 0

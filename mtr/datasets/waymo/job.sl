@@ -9,7 +9,7 @@
 #SBATCH --output=gs.out
 #SBATCH --error=gs.err
 #SBATCH --partition=gpu
-#SBATCH --gres=gpu:p100:1
+#SBATCH --gres=gpu:p100:2
 
 module purge 
 module load gcc/11.3.0
@@ -23,6 +23,6 @@ mamba init bash
 source ~/.bashrc
 
 mamba activate mtr_test
-export CUDA_VISIBLE_DEVICES='1'
-python data_preprocess.py ../../../../scenario/  ../../../data/waymo
+# export CUDA_VISIBLE_DEVICES='1'
+python data_preprocess.py ../../../../scenario/  ../../../data/waymo_lidar
 
