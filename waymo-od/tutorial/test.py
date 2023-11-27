@@ -32,6 +32,7 @@ dataset = tf.data.TFRecordDataset(WOMD_FILE, compression_type='')
 for cnt, data in enumerate(dataset):
   scenario = scenario_pb2.Scenario()
   scenario.ParseFromString(bytearray(data.numpy()))
+  print(f"scenario id: {scenario.scenario_id}")
   LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/training/{scenario.scenario_id}.tfrecord'
   womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
   scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(
