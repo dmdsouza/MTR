@@ -260,6 +260,7 @@ def _extract_point_clouds(scenario_augmented):
 def process_waymo_data_with_scenario_proto(data_file, output_path=None):
     dataset = tf.data.TFRecordDataset(data_file, compression_type='')
     ret_infos = []
+    print("started the dataset")
     for cnt, data in enumerate(dataset):
         info = {}
         scenario = scenario_pb2.Scenario()
@@ -306,6 +307,7 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
             pickle.dump(save_infos, f)
 
         ret_infos.append(info)
+    print("completed the dataset")
     return ret_infos
 
 
