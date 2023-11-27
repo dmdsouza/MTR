@@ -238,7 +238,7 @@ def _extract_point_clouds(scenario_augmented):
         frame_points_xyz[frame_i] = np.concatenate(points_xyz_list, axis=0)
         frame_points_feature[frame_i] = np.concatenate(points_feature_list, axis=0)
         frame_i += 1
-        return frame_points_xyz, frame_points_feature, frame_i
+    return frame_points_xyz, frame_points_feature, frame_i
 
 
 def process_waymo_data_with_scenario_proto(data_file, output_path=None):
