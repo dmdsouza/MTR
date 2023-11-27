@@ -17,6 +17,8 @@ from waymo_types import object_type, lane_type, road_line_type, road_edge_type, 
 
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
+physical_devices = tf.config.experimental.list_physical_devices('GPU')
+tf.config.experimental.set_memory_growth(physical_devices[1], True)
 gpus = tf.config.list_physical_devices('GPU')
 # if gpus:
 #   # Restrict TensorFlow to only use the first GPU
