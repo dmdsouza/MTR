@@ -265,16 +265,16 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         scenario = scenario_pb2.Scenario()
         scenario.ParseFromString(bytearray(data.numpy()))
 
-        LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/training/{scenario.scenario_id}.tfrecord'
-        womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
-        scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(
-            scenario, womd_lidar_scenario)
-        # print("here")
-        frame_points_xyz, frame_points_feature, frame_i = _extract_point_clouds(scenario_augmented)
-        # print("finished")
-        info['frame_points_xyz'] = frame_points_xyz
-        info['frame_points_feature'] = frame_points_feature
-        info['frame_i'] = frame_i
+        # LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/training/{scenario.scenario_id}.tfrecord'
+        # womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
+        # scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(
+        #     scenario, womd_lidar_scenario)
+        # # print("here")
+        # frame_points_xyz, frame_points_feature, frame_i = _extract_point_clouds(scenario_augmented)
+        # # print("finished")
+        # info['frame_points_xyz'] = frame_points_xyz
+        # info['frame_points_feature'] = frame_points_feature
+        # info['frame_i'] = frame_i
 
         info['scenario_id'] = scenario.scenario_id
         info['timestamps_seconds'] = list(scenario.timestamps_seconds)  # list of int of shape (91)
