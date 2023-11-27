@@ -14,6 +14,13 @@ from tqdm import tqdm
 from waymo_open_dataset.protos import scenario_pb2
 from waymo_types import object_type, lane_type, road_line_type, road_edge_type, signal_state, polyline_type
 
+import sys
+sys.path.insert(0, '/scratch1/dmdsouza/MTR/waymo-od/src')
+
+from waymo_open_dataset import dataset_pb2
+from waymo_open_dataset.protos import scenario_pb2
+from waymo_open_dataset.protos import compressed_lidar_pb2
+from waymo_open_dataset.utils import womd_lidar_utils
     
 def decode_tracks_from_proto(tracks):
     track_infos = {
@@ -166,6 +173,52 @@ def decode_dynamic_map_states_from_proto(dynamic_map_states):
 
     return dynamic_map_infos
 
+def _load_scenario_data(tfrecord_file: str) -> scenario_pb2.Scenario:
+  """Load a scenario proto from a tfrecord dataset file."""
+  dataset = tf.data.TFRecordDataset(tfrecord_file, compression_type='')
+  data = next(iter(dataset))
+  return scenario_pb2.Scenario.FromString(data.numpy())
+
+def _get_laser_calib(
+    frame_lasers: compressed_lidar_pb2.CompressedFrameLaserData,
+    laser_name: dataset_pb2.LaserName.Name):
+  for laser_calib in frame_lasers.laser_calibrations:
+    if laser_calib.name == laser_name:
+      return laser_calib
+  return None
+
+def _extract_point_clouds(scenario_augmented):
+    frame_points_xyz = {}  # map from frame indices to point clouds
+    frame_points_feature = {}
+    frame_i = 0
+    for frame_lasers in scenario_augmented.compressed_frame_laser_data:
+        points_xyz_list = []
+        points_feature_list = []
+        frame_pose = np.reshape(np.array(
+            scenario_augmented.compressed_frame_laser_data[frame_i].pose.transform),
+            (4, 4))
+        for laser in frame_lasers.lasers:
+            if laser.name == dataset_pb2.LaserName.TOP:
+                c = _get_laser_calib(frame_lasers, laser.name)
+                (points_xyz, points_feature,
+                points_xyz_return2,
+                points_feature_return2) = womd_lidar_utils.extract_top_lidar_points(
+                    laser, frame_pose, c)
+            else:
+                c = _get_laser_calib(frame_lasers, laser.name)
+                (points_xyz, points_feature,
+                points_xyz_return2,
+                points_feature_return2) = womd_lidar_utils.extract_side_lidar_points(
+                    laser, c)
+                points_xyz_list.append(points_xyz.numpy())
+                points_xyz_list.append(points_xyz_return2.numpy())
+                points_feature_list.append(points_feature.numpy())
+                points_feature_list.append(points_feature_return2.numpy())
+        frame_points_xyz[frame_i] = np.concatenate(points_xyz_list, axis=0)
+        frame_points_feature[frame_i] = np.concatenate(points_feature_list, axis=0)
+        frame_i += 1
+        return frame_points_xyz, frame_points_feature, frame_i
+
 
 def process_waymo_data_with_scenario_proto(data_file, output_path=None):
     dataset = tf.data.TFRecordDataset(data_file, compression_type='')
@@ -174,6 +227,16 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         info = {}
         scenario = scenario_pb2.Scenario()
         scenario.ParseFromString(bytearray(data.numpy()))
+        LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/training/{scenario.scenario_id}.tfrecord'
+        womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
+        scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(
+            scenario, womd_lidar_scenario)
+        
+        frame_points_xyz, frame_points_feature, frame_i = _extract_point_clouds(scenario_augmented)
+        
+        info['frame_points_xyz'] = frame_points_xyz
+        info['frame_points_feature'] = frame_points_feature
+        info['frame_i'] = frame_i
 
         info['scenario_id'] = scenario.scenario_id
         info['timestamps_seconds'] = list(scenario.timestamps_seconds)  # list of int of shape (91)
