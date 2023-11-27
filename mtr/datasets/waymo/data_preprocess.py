@@ -42,9 +42,14 @@ from waymo_types import object_type, lane_type, road_line_type, road_edge_type, 
 #     # Memory growth must be set before GPUs have been initialized
 #     print(e)
 
-config = tf.ConfigProto()
+# config = tf.ConfigProto()
+# config.gpu_options.allow_growth = True
+# session = tf.Session(config=config)
+
+config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
-session = tf.Session(config=config)
+session = tf.compat.v1.Session(config=config)
+
 
 from waymo_open_dataset import dataset_pb2
 from waymo_open_dataset.protos import scenario_pb2
