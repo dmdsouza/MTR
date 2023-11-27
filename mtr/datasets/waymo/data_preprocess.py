@@ -50,6 +50,8 @@ from waymo_types import object_type, lane_type, road_line_type, road_edge_type, 
 # config.gpu_options.allow_growth = True
 # session = tf.compat.v1.Session(config=config)
 
+os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+
 
 from waymo_open_dataset import dataset_pb2
 from waymo_open_dataset.protos import scenario_pb2
