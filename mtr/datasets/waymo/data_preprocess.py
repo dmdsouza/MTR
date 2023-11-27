@@ -261,8 +261,9 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
     dataset = tf.data.TFRecordDataset(data_file, compression_type='')
     ret_infos = []
     print("started the dataset")
+    print(f"the total number in the dataset {len(dataset)}")
     for cnt, data in enumerate(dataset):
-        print(f"the total number in the dataset {cnt}")
+        
         info = {}
         scenario = scenario_pb2.Scenario()
         scenario.ParseFromString(bytearray(data.numpy()))
