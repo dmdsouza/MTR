@@ -256,6 +256,19 @@ def _extract_point_clouds(scenario_augmented):
         frame_i += 1
     return frame_points_xyz, frame_points_feature, frame_i
 
+def _get_point_xyz_and_feature_from_laser(
+    frame_lasers: compressed_lidar_pb2.CompressedFrameLaserData,
+    extract_top_lidar: bool,
+):
+  """Get point cloud coordinates and features from frame laser data for test."""
+  for laser in frame_lasers.lasers:
+    if laser.name == dataset_pb2.LaserName.TOP and extract_top_lidar:
+      frame_pose = np.reshape(np.array(frame_lasers.pose.transform), (4, 4))
+      c = _get_laser_calib(frame_lasers, laser.name)
+      return womd_lidar_utils.extract_top_lidar_points(laser, frame_pose, c)
+    elif laser.name != dataset_pb2.LaserName.TOP and not extract_top_lidar:
+      c = _get_laser_calib(frame_lasers, laser.name)
+      return womd_lidar_utils.extract_side_lidar_points(laser, c)
 
 def process_waymo_data_with_scenario_proto(data_file, output_path=None):
     dataset = tf.data.TFRecordDataset(data_file, compression_type='')
@@ -272,12 +285,15 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
         scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(
             scenario, womd_lidar_scenario)
-        # print("here")
-        frame_points_xyz, frame_points_feature, frame_i = _extract_point_clouds(scenario_augmented)
-        # print("finished")
-        info['frame_points_xyz'] = frame_points_xyz
-        info['frame_points_feature'] = frame_points_feature
-        info['frame_i'] = frame_i
+        (points_xyz, points_feature,
+                points_xyz_return2,
+                points_feature_return2) = _get_point_xyz_and_feature_from_laser(scenario_augmented.compressed_frame_laser_data)
+        # frame_points_xyz, frame_points_feature, frame_i = _extract_point_clouds(scenario_augmented)
+
+        info['points_xyz'] = points_xyz
+        info['points_feature'] = points_feature
+        info['points_xyz_return2'] = points_xyz_return2
+        info['points_feature_return2'] = points_feature_return2
 
         info['scenario_id'] = scenario.scenario_id
         info['timestamps_seconds'] = list(scenario.timestamps_seconds)  # list of int of shape (91)
