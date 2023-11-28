@@ -287,7 +287,7 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
             scenario, womd_lidar_scenario)
         (points_xyz, points_feature,
                 points_xyz_return2,
-                points_feature_return2) = _get_point_xyz_and_feature_from_laser(scenario_augmented.compressed_frame_laser_data)
+                points_feature_return2) = _get_point_xyz_and_feature_from_laser(scenario_augmented.compressed_frame_laser_data, True)
         # frame_points_xyz, frame_points_feature, frame_i = _extract_point_clouds(scenario_augmented)
 
         info['points_xyz'] = points_xyz
