@@ -267,8 +267,8 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         info = {}
         scenario = scenario_pb2.Scenario()
         scenario.ParseFromString(bytearray(data.numpy()))
-        print(dir(scenario))
-        exit()
+        # print(dir(scenario))
+        # exit()
         LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/training/{scenario.scenario_id}.tfrecord'
         womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
         scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(
