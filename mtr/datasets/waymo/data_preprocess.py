@@ -293,6 +293,7 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         for frame_lasers in scenario_augmented.compressed_frame_laser_data:
             points_xyz_list = []
             points_feature_list = []
+            frame_i = 0
             frame_pose = np.reshape(np.array(
                 scenario_augmented.compressed_frame_laser_data[frame_i].pose.transform),
                 (4, 4))
