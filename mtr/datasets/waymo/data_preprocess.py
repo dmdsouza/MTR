@@ -333,6 +333,7 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
             pickle.dump(save_infos, f)
 
         ret_infos.append(info)
+    global count
     count += 1
     print(f"completed the dataset {count}", flush=True)
     return ret_infos
