@@ -52,6 +52,8 @@ from waymo_types import object_type, lane_type, road_line_type, road_edge_type, 
 
 os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
+count = 0
+
 
 from waymo_open_dataset import dataset_pb2
 from waymo_open_dataset.protos import scenario_pb2
@@ -274,7 +276,7 @@ def _get_point_xyz_and_feature_from_laser(
 def process_waymo_data_with_scenario_proto(data_file, output_path=None):
     dataset = tf.data.TFRecordDataset(data_file, compression_type='')
     ret_infos = []
-    print("started the dataset")
+    print("started the dataset", flush=True)
     # print(f"the total number in the dataset {len(dataset)}")
     for cnt, data in enumerate(dataset):
         
@@ -331,7 +333,8 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
             pickle.dump(save_infos, f)
 
         ret_infos.append(info)
-    print("completed the dataset")
+    count += 1
+    print(f"completed the dataset {count}", flush=True)
     return ret_infos
 
 
@@ -355,7 +358,7 @@ def get_infos_from_protos(data_path, output_path=None, num_workers=4):
     return all_infos
 
 
-def create_infos_from_protos(raw_data_path, output_path, num_workers=4):
+def create_infos_from_protos(raw_data_path, output_path, num_workers=8):
     train_infos = get_infos_from_protos(
         data_path=os.path.join(raw_data_path, 'training'),
         output_path=os.path.join(output_path, 'processed_scenarios_training'),
