@@ -282,7 +282,7 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
     dataset = tf.data.TFRecordDataset(data_file, compression_type='')
     ret_infos = []
     global count
-    print("started the dataset", flush=True)
+    # print("started the dataset", flush=True)
     # print(f"the total number in the dataset {len(dataset)}")
     for cnt, data in enumerate(dataset):
         
@@ -369,8 +369,8 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
 
         ret_infos.append(info)
     
-    count += 1
-    print(f"completed the dataset {count}", flush=True)
+    # count += 1
+    # print(f"completed the dataset {count}", flush=True)
     return ret_infos
 
 
