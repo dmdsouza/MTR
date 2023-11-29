@@ -53,6 +53,8 @@ from waymo_types import object_type, lane_type, road_line_type, road_edge_type, 
 os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
 count = 0
+# import tensorflow as tf
+tf.get_logger().setLevel('ERROR')
 
 
 from waymo_open_dataset import dataset_pb2
