@@ -296,10 +296,10 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
 
 
 
-        info['points_xyz'] = points_xyz
-        info['points_feature'] = points_feature
-        info['points_xyz_return2'] = points_xyz_return2
-        info['points_feature_return2'] = points_feature_return2
+        # info['points_xyz'] = points_xyz
+        # info['points_feature'] = points_feature
+        # info['points_xyz_return2'] = points_xyz_return2
+        # info['points_feature_return2'] = points_feature_return2
 
         info['scenario_id'] = scenario.scenario_id
         info['timestamps_seconds'] = list(scenario.timestamps_seconds)  # list of int of shape (91)
