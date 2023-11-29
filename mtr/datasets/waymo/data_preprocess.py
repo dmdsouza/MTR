@@ -55,6 +55,9 @@ os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 count = 0
 # import tensorflow as tf
 tf.get_logger().setLevel('ERROR')
+import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+
 
 
 from waymo_open_dataset import dataset_pb2
