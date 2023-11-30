@@ -294,35 +294,36 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
         scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(
             scenario, womd_lidar_scenario)
-        
-        for frame_lasers in scenario_augmented.compressed_frame_laser_data:
-            points_xyz_list = []
-            points_feature_list = []
-            frame_i = 0
-            frame_pose = np.reshape(np.array(
-                scenario_augmented.compressed_frame_laser_data[frame_i].pose.transform),
-                (4, 4))
-            for laser in frame_lasers.lasers:
-                if laser.name == dataset_pb2.LaserName.TOP:
-                    c = _get_laser_calib(frame_lasers, laser.name)
-                    (points_xyz, points_feature,
-                    points_xyz_return2,
-                    points_feature_return2) = womd_lidar_utils.extract_top_lidar_points(
-                        laser, frame_pose, c)
-                else:
-                    c = _get_laser_calib(frame_lasers, laser.name)
-                    (points_xyz, points_feature,
-                    points_xyz_return2,
-                    points_feature_return2) = womd_lidar_utils.extract_side_lidar_points(
-                        laser, c)
-                points_xyz_list.append(points_xyz.numpy())
-                points_xyz_list.append(points_xyz_return2.numpy())
-                points_feature_list.append(points_feature.numpy())
-                points_feature_list.append(points_feature_return2.numpy())
-            frame_points_xyz = np.concatenate(points_xyz_list, axis=0)
-            frame_points_feature = np.concatenate(points_feature_list, axis=0)
-            frame_i += 1
-            break
+        # frame_points_xyz = 
+        frame_i = 0
+        # for frame_lasers in scenario_augmented.compressed_frame_laser_data:
+        points_xyz_list = []
+        points_feature_list = []
+        frame_i = 0
+        frame_pose = np.reshape(np.array(
+            scenario_augmented.compressed_frame_laser_data[frame_i].pose.transform),
+            (4, 4))
+        for laser in scenario_augmented.compressed_frame_laser_data[frame_i].lasers:
+            if laser.name == dataset_pb2.LaserName.TOP:
+                c = _get_laser_calib(scenario_augmented.compressed_frame_laser_data[frame_i], laser.name)
+                (points_xyz, points_feature,
+                points_xyz_return2,
+                points_feature_return2) = womd_lidar_utils.extract_top_lidar_points(
+                    laser, frame_pose, c)
+            else:
+                c = _get_laser_calib(scenario_augmented.compressed_frame_laser_data[frame_i], laser.name)
+                (points_xyz, points_feature,
+                points_xyz_return2,
+                points_feature_return2) = womd_lidar_utils.extract_side_lidar_points(
+                    laser, c)
+            points_xyz_list.append(points_xyz.numpy())
+            points_xyz_list.append(points_xyz_return2.numpy())
+            points_feature_list.append(points_feature.numpy())
+            points_feature_list.append(points_feature_return2.numpy())
+        frame_points_xyz = np.concatenate(points_xyz_list, axis=0)
+        frame_points_feature = np.concatenate(points_feature_list, axis=0)
+        # frame_i += 1
+            # break
         # (points_xyz, points_feature,
         #         points_xyz_return2,
         #         points_feature_return2) = _get_point_xyz_and_feature_from_laser(scenario_augmented.compressed_frame_laser_data[0], True)
@@ -388,7 +389,7 @@ def get_infos_from_protos(data_path, output_path=None, num_workers=4):
 
     # func(src_files[0])
     with multiprocessing.Pool(num_workers) as p:
-        data_infos = list(tqdm(p.imap(func, src_files), total=len(src_files)))
+        data_infos = list(tqdm(p.imap(func, src_files), total=len(src_files)//100))
 
     all_infos = [item for infos in data_infos for item in infos]
     return all_infos
