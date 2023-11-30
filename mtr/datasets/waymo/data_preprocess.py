@@ -394,7 +394,7 @@ def get_infos_from_protos(data_path, output_path=None, num_workers=4):
     return all_infos
 
 
-def create_infos_from_protos(raw_data_path, output_path, num_workers=8):
+def create_infos_from_protos(raw_data_path, output_path, num_workers=4):
     train_infos = get_infos_from_protos(
         data_path=os.path.join(raw_data_path, 'training'),
         output_path=os.path.join(output_path, 'processed_scenarios_training'),
