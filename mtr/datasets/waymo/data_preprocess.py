@@ -54,9 +54,9 @@ os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
 count = 0
 # import tensorflow as tf
-tf.get_logger().setLevel('ERROR')
-import os
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+# tf.get_logger().setLevel('ERROR')
+# import os
+# os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 
 
@@ -284,7 +284,7 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
     global count
     # print("started the dataset", flush=True)
     # print(f"the total number in the dataset {len(dataset)}")
-    for cnt, data in enumerate(dataset):
+    for cnt, data in enumerate(dataset, 100):
         
         info = {}
         scenario = scenario_pb2.Scenario()
@@ -400,6 +400,7 @@ def create_infos_from_protos(raw_data_path, output_path, num_workers=8):
         output_path=os.path.join(output_path, 'processed_scenarios_training'),
         num_workers=num_workers
     )
+    print("starting the infos.pkl file")
     train_filename = os.path.join(output_path, 'processed_scenarios_training_infos.pkl')
     with open(train_filename, 'wb') as f:
         pickle.dump(train_infos, f)
