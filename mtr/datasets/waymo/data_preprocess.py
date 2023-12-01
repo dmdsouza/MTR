@@ -4,7 +4,7 @@
 # All Rights Reserved
 
 import sys
-sys.path.insert(-1, '/scratch1/dmdsouza/MTR/waymo-od/src')
+sys.path.insert(0, '/scratch1/dmdsouza/MTR/waymo-od/src')
 import sys, os
 import numpy as np
 import pickle
