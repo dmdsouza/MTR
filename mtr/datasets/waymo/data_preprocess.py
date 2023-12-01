@@ -283,8 +283,9 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
     ret_infos = []
     # global count
     print("started the dataset", flush=True)
+    # print(len(dataset))
     # print(f"the total number in the dataset {len(dataset)}")
-    for cnt, data in enumerate(dataset, 100):
+    for cnt, data in enumerate(dataset):
         
         info = {}
         scenario = scenario_pb2.Scenario()
@@ -386,6 +387,7 @@ def get_infos_from_protos(data_path, output_path=None, num_workers=4):
 
     src_files = glob.glob(os.path.join(data_path, '*.tfrecord*'))
     src_files.sort()
+    src_files = src_files[:10]
 
     # func(src_files[0])
     with multiprocessing.Pool(num_workers) as p:
