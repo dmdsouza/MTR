@@ -290,6 +290,11 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         info = {}
         scenario = scenario_pb2.Scenario()
         scenario.ParseFromString(bytearray(data.numpy()))
+        info['scenario_id'] = scenario.scenario_id
+        info['timestamps_seconds'] = list(scenario.timestamps_seconds)  # list of int of shape (91)
+        info['current_time_index'] = scenario.current_time_index  # int, 10
+        info['sdc_track_index'] = scenario.sdc_track_index  # int
+        info['objects_of_interest'] = list(scenario.objects_of_interest)  # list, could be empty list
 
         LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/training/{scenario.scenario_id}.tfrecord'
         if os.path.isfile(LIDAR_DATA_FILE):
@@ -343,11 +348,7 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         # info['points_xyz_return2'] = points_xyz_return2
         # info['points_feature_return2'] = points_feature_return2
 
-        info['scenario_id'] = scenario.scenario_id
-        info['timestamps_seconds'] = list(scenario.timestamps_seconds)  # list of int of shape (91)
-        info['current_time_index'] = scenario.current_time_index  # int, 10
-        info['sdc_track_index'] = scenario.sdc_track_index  # int
-        info['objects_of_interest'] = list(scenario.objects_of_interest)  # list, could be empty list
+        
 
         info['tracks_to_predict'] = {
             'track_index': [cur_pred.track_index for cur_pred in scenario.tracks_to_predict],
