@@ -4,7 +4,7 @@
 # All Rights Reserved
 
 import sys
-sys.path.insert(0, '/scratch1/dmdsouza/MTR/waymo-od/src')
+sys.path.insert(-1, '/scratch1/dmdsouza/MTR/waymo-od/src')
 import sys, os
 import numpy as np
 import pickle
@@ -333,7 +333,9 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
             info['frame_points_xyz'] = frame_points_xyz
             info['frame_points_feature'] = frame_points_feature
         # info['frame_i'] = frame_i
-
+        else:
+            info['frame_points_xyz'] = None
+            info['frame_points_feature'] = None
 
 
         # info['points_xyz'] = points_xyz
