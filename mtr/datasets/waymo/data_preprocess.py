@@ -281,84 +281,16 @@ def _get_point_xyz_and_feature_from_laser(
 def process_waymo_data_with_scenario_proto(data_file, output_path=None):
     dataset = tf.data.TFRecordDataset(data_file, compression_type='')
     ret_infos = []
-    # global count
-    print("started the dataset", flush=True)
-    # print(len(dataset))
-    # print(f"the total number in the dataset {len(dataset)}")
-    mode = ""
-    if "training" in data_file:
-        print("training\n\n\n")
-        mode = "training"
-    else:
-        print("validation\n\n\n")
-        mode = "validation"
-
     for cnt, data in enumerate(dataset):
-        
         info = {}
         scenario = scenario_pb2.Scenario()
         scenario.ParseFromString(bytearray(data.numpy()))
+
         info['scenario_id'] = scenario.scenario_id
         info['timestamps_seconds'] = list(scenario.timestamps_seconds)  # list of int of shape (91)
         info['current_time_index'] = scenario.current_time_index  # int, 10
         info['sdc_track_index'] = scenario.sdc_track_index  # int
         info['objects_of_interest'] = list(scenario.objects_of_interest)  # list, could be empty list
-
-        LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/{mode}/{scenario.scenario_id}.tfrecord'
-        # if os.path.isfile(LIDAR_DATA_FILE):
-        womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
-        scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(
-            scenario, womd_lidar_scenario)
-        # frame_points_xyz = 
-        frame_i = 0
-        # for frame_lasers in scenario_augmented.compressed_frame_laser_data:
-        points_xyz_list = []
-        points_feature_list = []
-        frame_i = 0
-        frame_pose = np.reshape(np.array(
-            scenario_augmented.compressed_frame_laser_data[frame_i].pose.transform),
-            (4, 4))
-        for laser in scenario_augmented.compressed_frame_laser_data[frame_i].lasers:
-            if laser.name == dataset_pb2.LaserName.TOP:
-                c = _get_laser_calib(scenario_augmented.compressed_frame_laser_data[frame_i], laser.name)
-                (points_xyz, points_feature,
-                points_xyz_return2,
-                points_feature_return2) = womd_lidar_utils.extract_top_lidar_points(
-                    laser, frame_pose, c)
-            else:
-                c = _get_laser_calib(scenario_augmented.compressed_frame_laser_data[frame_i], laser.name)
-                (points_xyz, points_feature,
-                points_xyz_return2,
-                points_feature_return2) = womd_lidar_utils.extract_side_lidar_points(
-                    laser, c)
-            points_xyz_list.append(points_xyz.numpy())
-            points_xyz_list.append(points_xyz_return2.numpy())
-            points_feature_list.append(points_feature.numpy())
-            points_feature_list.append(points_feature_return2.numpy())
-        frame_points_xyz = np.concatenate(points_xyz_list, axis=0)
-        frame_points_feature = np.concatenate(points_feature_list, axis=0)
-        # print(f"shape of frame_points feature {frame_points_feature.shape}")
-        # print(f"shape of frame points xyz {frame_points_xyz.shape}")
-        # frame_i += 1
-            # break
-        # (points_xyz, points_feature,
-        #         points_xyz_return2,
-        #         points_feature_return2) = _get_point_xyz_and_feature_from_laser(scenario_augmented.compressed_frame_laser_data[0], True)
-        # frame_points_xyz, frame_points_feature, frame_i = _extract_point_clouds(scenario_augmented)
-        # info['frame_points_xyz'] = [frame_points_xyz for cur_pred in scenario.tracks_to_predict]
-        # info['frame_points_feature'] = [frame_points_feature for cur_pred in scenario.tracks_to_predict]
-        # info['frame_i'] = frame_i
-        # else:
-        #     info['frame_points_xyz'] = [np.zeros((167727, 3)) for cur_pred in scenario.tracks_to_predict]
-        #     info['frame_points_feature'] = [np.zeros((167727, 3)) for cur_pred in scenario.tracks_to_predict]
-
-
-        # info['points_xyz'] = points_xyz
-        # info['points_feature'] = points_feature
-        # info['points_xyz_return2'] = points_xyz_return2
-        # info['points_feature_return2'] = points_feature_return2
-
-        
 
         info['tracks_to_predict'] = {
             'track_index': [cur_pred.track_index for cur_pred in scenario.tracks_to_predict],
@@ -384,6 +316,112 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
             pickle.dump(save_infos, f)
 
         ret_infos.append(info)
+    return ret_infos
+    # dataset = tf.data.TFRecordDataset(data_file, compression_type='')
+    # ret_infos = []
+    # # global count
+    # print("started the dataset", flush=True)
+    # # print(len(dataset))
+    # # print(f"the total number in the dataset {len(dataset)}")
+    # mode = ""
+    # if "training" in data_file:
+    #     print("training\n\n\n")
+    #     mode = "training"
+    # else:
+    #     print("validation\n\n\n")
+    #     mode = "validation"
+
+    # for cnt, data in enumerate(dataset):
+        
+    #     info = {}
+    #     scenario = scenario_pb2.Scenario()
+    #     scenario.ParseFromString(bytearray(data.numpy()))
+    #     info['scenario_id'] = scenario.scenario_id
+    #     info['timestamps_seconds'] = list(scenario.timestamps_seconds)  # list of int of shape (91)
+    #     info['current_time_index'] = scenario.current_time_index  # int, 10
+    #     info['sdc_track_index'] = scenario.sdc_track_index  # int
+    #     info['objects_of_interest'] = list(scenario.objects_of_interest)  # list, could be empty list
+
+    #     LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/{mode}/{scenario.scenario_id}.tfrecord'
+    #     # if os.path.isfile(LIDAR_DATA_FILE):
+    #     womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
+    #     scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(
+    #         scenario, womd_lidar_scenario)
+    #     # frame_points_xyz = 
+    #     frame_i = 0
+    #     # for frame_lasers in scenario_augmented.compressed_frame_laser_data:
+    #     points_xyz_list = []
+    #     points_feature_list = []
+    #     frame_i = 0
+    #     frame_pose = np.reshape(np.array(
+    #         scenario_augmented.compressed_frame_laser_data[frame_i].pose.transform),
+    #         (4, 4))
+    #     for laser in scenario_augmented.compressed_frame_laser_data[frame_i].lasers:
+    #         if laser.name == dataset_pb2.LaserName.TOP:
+    #             c = _get_laser_calib(scenario_augmented.compressed_frame_laser_data[frame_i], laser.name)
+    #             (points_xyz, points_feature,
+    #             points_xyz_return2,
+    #             points_feature_return2) = womd_lidar_utils.extract_top_lidar_points(
+    #                 laser, frame_pose, c)
+    #         else:
+    #             c = _get_laser_calib(scenario_augmented.compressed_frame_laser_data[frame_i], laser.name)
+    #             (points_xyz, points_feature,
+    #             points_xyz_return2,
+    #             points_feature_return2) = womd_lidar_utils.extract_side_lidar_points(
+    #                 laser, c)
+    #         points_xyz_list.append(points_xyz.numpy())
+    #         points_xyz_list.append(points_xyz_return2.numpy())
+    #         points_feature_list.append(points_feature.numpy())
+    #         points_feature_list.append(points_feature_return2.numpy())
+    #     frame_points_xyz = np.concatenate(points_xyz_list, axis=0)
+    #     frame_points_feature = np.concatenate(points_feature_list, axis=0)
+    #     # print(f"shape of frame_points feature {frame_points_feature.shape}")
+    #     # print(f"shape of frame points xyz {frame_points_xyz.shape}")
+    #     # frame_i += 1
+    #         # break
+    #     # (points_xyz, points_feature,
+    #     #         points_xyz_return2,
+    #     #         points_feature_return2) = _get_point_xyz_and_feature_from_laser(scenario_augmented.compressed_frame_laser_data[0], True)
+    #     # frame_points_xyz, frame_points_feature, frame_i = _extract_point_clouds(scenario_augmented)
+    #     info['frame_points_xyz'] = frame_points_xyz 
+    #     info['frame_points_feature'] = frame_points_feature
+    #     # info['frame_i'] = frame_i
+    #     # else:
+    #     #     info['frame_points_xyz'] = [np.zeros((167727, 3)) for cur_pred in scenario.tracks_to_predict]
+    #     #     info['frame_points_feature'] = [np.zeros((167727, 3)) for cur_pred in scenario.tracks_to_predict]
+
+
+    #     # info['points_xyz'] = points_xyz
+    #     # info['points_feature'] = points_feature
+    #     # info['points_xyz_return2'] = points_xyz_return2
+    #     # info['points_feature_return2'] = points_feature_return2
+
+        
+
+    #     info['tracks_to_predict'] = {
+    #         'track_index': [cur_pred.track_index for cur_pred in scenario.tracks_to_predict],
+    #         'difficulty': [cur_pred.difficulty for cur_pred in scenario.tracks_to_predict]
+    #     }  # for training: suggestion of objects to train on, for val/test: need to be predicted
+
+    #     track_infos = decode_tracks_from_proto(scenario.tracks)
+    #     info['tracks_to_predict']['object_type'] = [track_infos['object_type'][cur_idx] for cur_idx in info['tracks_to_predict']['track_index']]
+
+    #     # decode map related data
+    #     map_infos = decode_map_features_from_proto(scenario.map_features)
+    #     dynamic_map_infos = decode_dynamic_map_states_from_proto(scenario.dynamic_map_states)
+
+    #     save_infos = {
+    #         'track_infos': track_infos,
+    #         'dynamic_map_infos': dynamic_map_infos,
+    #         'map_infos': map_infos
+    #     }
+    #     save_infos.update(info)
+
+    #     output_file = os.path.join(output_path, f'sample_{scenario.scenario_id}.pkl')
+    #     with open(output_file, 'wb') as f:
+    #         pickle.dump(save_infos, f)
+
+    #     ret_infos.append(info)
     
     # count += 1
     print(f"completed the dataset {count}", flush=True)
