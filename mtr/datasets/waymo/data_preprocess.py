@@ -329,6 +329,8 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
                 points_feature_list.append(points_feature_return2.numpy())
             frame_points_xyz = np.concatenate(points_xyz_list, axis=0)
             frame_points_feature = np.concatenate(points_feature_list, axis=0)
+            print(f"shape of frame_points feature {frame_points_feature.shape}")
+            print(f"shape of frame points xyz {frame_points_xyz.shape}")
             # frame_i += 1
                 # break
             # (points_xyz, points_feature,
