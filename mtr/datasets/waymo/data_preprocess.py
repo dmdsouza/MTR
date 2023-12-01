@@ -391,7 +391,7 @@ def get_infos_from_protos(data_path, output_path=None, num_workers=4):
 
     # func(src_files[0])
     with multiprocessing.Pool(num_workers) as p:
-        data_infos = list(tqdm(p.imap(func, src_files), total=len(src_files)//100))
+        data_infos = list(tqdm(p.imap(func, src_files), total=len(src_files)))
 
     all_infos = [item for infos in data_infos for item in infos]
     return all_infos
