@@ -23,9 +23,9 @@ import numpy as np
 
 from waymo_open_dataset.protos import compressed_lidar_pb2
 
-
+from typing import List, Tuple
 def compress(
-    range_image: np.ndarray, quant_precision: Union[float, list[float]]
+    range_image: np.ndarray, quant_precision: Union[float, List[float]]
 ) -> bytes:
   """Compresses a range image using delta encoding.
 
@@ -102,7 +102,7 @@ def decompress(compressed_range_image: bytes) -> np.ndarray:
 
 
 def _compute_metadata(
-    quant_precision: list[float], shape: tuple[int, ...]
+    quant_precision: List[float], shape: Tuple[int, ...]
 ) -> compressed_lidar_pb2.Metadata:
   """Computes shape, mask len, quant precision as meta data bytes.
 
@@ -178,7 +178,7 @@ def _rldecode(lengths: np.ndarray) -> np.ndarray:
   return np.array(x)
 
 
-def _compute_mask(range_image: np.ndarray) -> list[bool]:
+def _compute_mask(range_image: np.ndarray) -> List[bool]:
   """Computes a run-length encoded mask array from a rounded range image.
 
   Args:
@@ -194,7 +194,7 @@ def _compute_mask(range_image: np.ndarray) -> list[bool]:
   return encoded_mask.tolist()
 
 
-def _compute_residual(range_image_round: np.ndarray) -> list[int]:
+def _compute_residual(range_image_round: np.ndarray) -> List[int]:
   """Computes the residual from a rounded range image.
 
   Args:
