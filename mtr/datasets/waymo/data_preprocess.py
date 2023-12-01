@@ -285,6 +285,14 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
     print("started the dataset", flush=True)
     # print(len(dataset))
     # print(f"the total number in the dataset {len(dataset)}")
+    mode = ""
+    if "training" in data_file:
+        print("training\n\n\n")
+        mode = "training"
+    else:
+        print("validation\n\n\n")
+        mode = "validation"
+
     for cnt, data in enumerate(dataset):
         
         info = {}
@@ -296,7 +304,7 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         info['sdc_track_index'] = scenario.sdc_track_index  # int
         info['objects_of_interest'] = list(scenario.objects_of_interest)  # list, could be empty list
 
-        LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/training/{scenario.scenario_id}.tfrecord'
+        LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/{mode}/{scenario.scenario_id}.tfrecord'
         if os.path.isfile(LIDAR_DATA_FILE):
             womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
             scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(
