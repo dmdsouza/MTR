@@ -14,14 +14,6 @@ from mtr.datasets.dataset import DatasetTemplate
 from mtr.utils import common_utils
 from mtr.config import cfg
 
-import sys
-sys.path.insert(0, '/scratch1/dmdsouza/MTR/waymo-od/src')
-
-from waymo_open_dataset import dataset_pb2
-from waymo_open_dataset.protos import scenario_pb2
-from waymo_open_dataset.protos import compressed_lidar_pb2
-from waymo_open_dataset.utils import womd_lidar_utils
-
 
 class WaymoDataset(DatasetTemplate):
     def __init__(self, dataset_cfg, training=True, logger=None):
@@ -36,7 +28,7 @@ class WaymoDataset(DatasetTemplate):
         self.logger.info(f'Start to load infos from {info_path}')
         with open(info_path, 'rb') as f:
             src_infos = pickle.load(f)
-
+        self.logger.info(f'length of 0: {len(src_infos)} 1: {len(src_infos[0])} 2: {len(src_infos[0][0])}')
         infos = src_infos[::self.dataset_cfg.SAMPLE_INTERVAL[self.mode]]
         self.logger.info(f'Total scenes before filters: {len(infos)}')
 
@@ -93,6 +85,10 @@ class WaymoDataset(DatasetTemplate):
         sdc_track_index = info['sdc_track_index']
         current_time_index = info['current_time_index']
         timestamps = np.array(info['timestamps_seconds'][:current_time_index + 1], dtype=np.float32)
+        
+        #lidar data
+        frame_points_xyz = info['frame_points_xyz'] 
+        frame_points_feature = info['frame_points_feature'] 
 
         track_infos = info['track_infos']
 
