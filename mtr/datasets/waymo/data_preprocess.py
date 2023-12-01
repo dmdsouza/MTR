@@ -292,45 +292,46 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         scenario.ParseFromString(bytearray(data.numpy()))
 
         LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/training/{scenario.scenario_id}.tfrecord'
-        womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
-        scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(
-            scenario, womd_lidar_scenario)
-        # frame_points_xyz = 
-        frame_i = 0
-        # for frame_lasers in scenario_augmented.compressed_frame_laser_data:
-        points_xyz_list = []
-        points_feature_list = []
-        frame_i = 0
-        frame_pose = np.reshape(np.array(
-            scenario_augmented.compressed_frame_laser_data[frame_i].pose.transform),
-            (4, 4))
-        for laser in scenario_augmented.compressed_frame_laser_data[frame_i].lasers:
-            if laser.name == dataset_pb2.LaserName.TOP:
-                c = _get_laser_calib(scenario_augmented.compressed_frame_laser_data[frame_i], laser.name)
-                (points_xyz, points_feature,
-                points_xyz_return2,
-                points_feature_return2) = womd_lidar_utils.extract_top_lidar_points(
-                    laser, frame_pose, c)
-            else:
-                c = _get_laser_calib(scenario_augmented.compressed_frame_laser_data[frame_i], laser.name)
-                (points_xyz, points_feature,
-                points_xyz_return2,
-                points_feature_return2) = womd_lidar_utils.extract_side_lidar_points(
-                    laser, c)
-            points_xyz_list.append(points_xyz.numpy())
-            points_xyz_list.append(points_xyz_return2.numpy())
-            points_feature_list.append(points_feature.numpy())
-            points_feature_list.append(points_feature_return2.numpy())
-        frame_points_xyz = np.concatenate(points_xyz_list, axis=0)
-        frame_points_feature = np.concatenate(points_feature_list, axis=0)
-        # frame_i += 1
-            # break
-        # (points_xyz, points_feature,
-        #         points_xyz_return2,
-        #         points_feature_return2) = _get_point_xyz_and_feature_from_laser(scenario_augmented.compressed_frame_laser_data[0], True)
-        # frame_points_xyz, frame_points_feature, frame_i = _extract_point_clouds(scenario_augmented)
-        info['frame_points_xyz'] = frame_points_xyz
-        info['frame_points_feature'] = frame_points_feature
+        if os.path.isfile(LIDAR_DATA_FILE):
+            womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
+            scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(
+                scenario, womd_lidar_scenario)
+            # frame_points_xyz = 
+            frame_i = 0
+            # for frame_lasers in scenario_augmented.compressed_frame_laser_data:
+            points_xyz_list = []
+            points_feature_list = []
+            frame_i = 0
+            frame_pose = np.reshape(np.array(
+                scenario_augmented.compressed_frame_laser_data[frame_i].pose.transform),
+                (4, 4))
+            for laser in scenario_augmented.compressed_frame_laser_data[frame_i].lasers:
+                if laser.name == dataset_pb2.LaserName.TOP:
+                    c = _get_laser_calib(scenario_augmented.compressed_frame_laser_data[frame_i], laser.name)
+                    (points_xyz, points_feature,
+                    points_xyz_return2,
+                    points_feature_return2) = womd_lidar_utils.extract_top_lidar_points(
+                        laser, frame_pose, c)
+                else:
+                    c = _get_laser_calib(scenario_augmented.compressed_frame_laser_data[frame_i], laser.name)
+                    (points_xyz, points_feature,
+                    points_xyz_return2,
+                    points_feature_return2) = womd_lidar_utils.extract_side_lidar_points(
+                        laser, c)
+                points_xyz_list.append(points_xyz.numpy())
+                points_xyz_list.append(points_xyz_return2.numpy())
+                points_feature_list.append(points_feature.numpy())
+                points_feature_list.append(points_feature_return2.numpy())
+            frame_points_xyz = np.concatenate(points_xyz_list, axis=0)
+            frame_points_feature = np.concatenate(points_feature_list, axis=0)
+            # frame_i += 1
+                # break
+            # (points_xyz, points_feature,
+            #         points_xyz_return2,
+            #         points_feature_return2) = _get_point_xyz_and_feature_from_laser(scenario_augmented.compressed_frame_laser_data[0], True)
+            # frame_points_xyz, frame_points_feature, frame_i = _extract_point_clouds(scenario_augmented)
+            info['frame_points_xyz'] = frame_points_xyz
+            info['frame_points_feature'] = frame_points_feature
         # info['frame_i'] = frame_i
 
 
