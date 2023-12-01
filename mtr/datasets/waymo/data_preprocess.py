@@ -268,7 +268,7 @@ def get_infos_from_protos(data_path, output_path=None, num_workers=4):
 
     src_files = glob.glob(os.path.join(data_path, '*.tfrecord*'))
     src_files.sort()
-    src_files = src_files[:2]
+    src_files = src_files[:10]
 
     # func(src_files[0])
     with multiprocessing.Pool(num_workers) as p:
