@@ -221,7 +221,7 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/{mode}/{scenario.scenario_id}.tfrecord'
         womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
         scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(scenario, womd_lidar_scenario)
-        for frame_lasers in scenario_augmented.compressed_frame_laser_data:
+        for idx, frame_lasers in enumerate(scenario_augmented.compressed_frame_laser_data,1000):
             (points_xyz, points_feature, points_xyz_return2,points_feature_return2) = _get_point_xyz_and_feature_from_laser(frame_lasers, True)
             points_xyz_list.append(points_xyz.numpy())
             points_xyz_list.append(points_xyz_return2.numpy())
