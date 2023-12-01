@@ -15,6 +15,10 @@ from waymo_open_dataset.protos import scenario_pb2
 from waymo_types import object_type, lane_type, road_line_type, road_edge_type, signal_state, polyline_type
 
 sys.path.insert(0, '/scratch1/dmdsouza/MTR/waymo-od/src')
+from waymo_open_dataset import dataset_pb2
+from waymo_open_dataset.protos import scenario_pb2
+from waymo_open_dataset.protos import compressed_lidar_pb2
+from waymo_open_dataset.utils import womd_lidar_utils
     
 def decode_tracks_from_proto(tracks):
     track_infos = {
