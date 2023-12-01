@@ -2,10 +2,11 @@
 # Published at NeurIPS 2022
 # Written by Shaoshuai Shi 
 # All Rights Reserved
-os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+
 import sys
 sys.path.insert(0, '/scratch1/dmdsouza/MTR/waymo-od/src')
 import os
+os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 import numpy as np
 import pickle
 import tensorflow as tf
