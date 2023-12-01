@@ -28,6 +28,9 @@ class WaymoDataset(DatasetTemplate):
         self.logger.info(f'Start to load infos from {info_path}')
         with open(info_path, 'rb') as f:
             src_infos = pickle.load(f)
+        self.logger.info(f'length of 0: {len(src_infos)}')
+        self.logger.info(f'length of 1: {len(src_infos[0])} ')
+        self.logger.info(f'length of  2: {len(src_infos[0][0])}')
         self.logger.info(f'length of 0: {len(src_infos)} 1: {len(src_infos[0])} 2: {len(src_infos[0][0])}')
         infos = src_infos[::self.dataset_cfg.SAMPLE_INTERVAL[self.mode]]
         self.logger.info(f'Total scenes before filters: {len(infos)}')
