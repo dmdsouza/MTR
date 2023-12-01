@@ -89,8 +89,8 @@ class WaymoDataset(DatasetTemplate):
         #lidar data
         frame_points_xyz = info['frame_points_xyz'] 
         frame_points_feature = info['frame_points_feature'] 
-        print(frame_points_xyz.shape)
-        print(frame_points_feature.shape)
+        print(frame_points_xyz)
+        print(frame_points_feature)
 
         track_infos = info['track_infos']
 

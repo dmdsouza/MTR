@@ -181,6 +181,9 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         info['sdc_track_index'] = scenario.sdc_track_index  # int
         info['objects_of_interest'] = list(scenario.objects_of_interest)  # list, could be empty list
 
+        info['frame_points_xyz'] = "hello"
+        info['frame_points_feature'] = "goodbye"
+
         info['tracks_to_predict'] = {
             'track_index': [cur_pred.track_index for cur_pred in scenario.tracks_to_predict],
             'difficulty': [cur_pred.difficulty for cur_pred in scenario.tracks_to_predict]
@@ -219,6 +222,7 @@ def get_infos_from_protos(data_path, output_path=None, num_workers=4):
 
     src_files = glob.glob(os.path.join(data_path, '*.tfrecord*'))
     src_files.sort()
+    src_files = src_files[:2]
 
     # func(src_files[0])
     with multiprocessing.Pool(num_workers) as p:
