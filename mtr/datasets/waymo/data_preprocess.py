@@ -221,13 +221,14 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         LIDAR_DATA_FILE = f'/scratch1/dmdsouza/lidar/{mode}/{scenario.scenario_id}.tfrecord'
         womd_lidar_scenario = _load_scenario_data(LIDAR_DATA_FILE)
         scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(scenario, womd_lidar_scenario)
-        (points_xyz, points_feature, points_xyz_return2,points_feature_return2) = _get_point_xyz_and_feature_from_laser(scenario_augmented.compressed_frame_laser_data[0], True)
-        points_xyz_list.append(points_xyz.numpy())
-        points_xyz_list.append(points_xyz_return2.numpy())
-        points_feature_list.append(points_feature.numpy())
-        points_feature_list.append(points_feature_return2.numpy())
-        info['frame_points_xyz'] = points_xyz_list
-        info['frame_points_feature'] = points_feature_list
+        for frame_lasers in scenario_augmented.compressed_frame_laser_data:
+            (points_xyz, points_feature, points_xyz_return2,points_feature_return2) = _get_point_xyz_and_feature_from_laser(frame_lasers, True)
+            points_xyz_list.append(points_xyz.numpy())
+            points_xyz_list.append(points_xyz_return2.numpy())
+            points_feature_list.append(points_feature.numpy())
+            points_feature_list.append(points_feature_return2.numpy())
+        info['frame_points_xyz'] = np.concatenate(points_xyz_list, axis=0)
+        info['frame_points_feature'] = np.concatenate(points_feature_list, axis=0)
 
         info['tracks_to_predict'] = {
             'track_index': [cur_pred.track_index for cur_pred in scenario.tracks_to_predict],
