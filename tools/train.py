@@ -24,7 +24,7 @@ from mtr.models import model as model_utils
 from train_utils.train_utils import train_model
 
 import sys
-sys.path.insert(-1, '/scratch1/dmdsouza/MTR/waymo-od/src')
+
 
 def parse_config():
     parser = argparse.ArgumentParser(description='arg parser')
@@ -110,6 +110,7 @@ def build_scheduler(optimizer, dataloader, opt_cfg, total_epochs, total_iters_ea
 
 
 def main():
+    print(sys.path)
     args, cfg = parse_config()
     if args.launcher == 'none':
         dist_train = False
