@@ -226,8 +226,8 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         points_xyz_list.append(points_xyz_return2.numpy())
         points_feature_list.append(points_feature.numpy())
         points_feature_list.append(points_feature_return2.numpy())
-        info['frame_points_xyz'] = "hello"
-        info['frame_points_feature'] = "goodbye"
+        info['frame_points_xyz'] = points_xyz_list
+        info['frame_points_feature'] = points_feature_list
 
         info['tracks_to_predict'] = {
             'track_index': [cur_pred.track_index for cur_pred in scenario.tracks_to_predict],
