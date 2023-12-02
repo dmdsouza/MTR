@@ -223,12 +223,13 @@ def process_waymo_data_with_scenario_proto(data_file, output_path=None):
         scenario_augmented = womd_lidar_utils.augment_womd_scenario_with_lidar_points(scenario, womd_lidar_scenario)
         # for idx, frame_lasers in enumerate(scenario_augmented.compressed_frame_laser_data,1000):
         # print(f"The length of lidar frames: {len(scenario_augmented.compressed_frame_laser_data)}")
-        for idx, frame_laser in enumerate(scenario_augmented.compressed_frame_laser_data, 4):
-            (points_xyz, points_feature, points_xyz_return2,points_feature_return2) = _get_point_xyz_and_feature_from_laser(frame_laser, True)
-            points_xyz_list.append(points_xyz.numpy())
-            points_xyz_list.append(points_xyz_return2.numpy())
-            points_feature_list.append(points_feature.numpy())
-            points_feature_list.append(points_feature_return2.numpy())
+        # for idx, frame_laser in enumerate(scenario_augmented.compressed_frame_laser_data, 4):
+        # (points_xyz, points_feature, points_xyz_return2,points_feature_return2) = _get_point_xyz_and_feature_from_laser(frame_laser, True)
+        (points_xyz, points_feature, points_xyz_return2,points_feature_return2) = _get_point_xyz_and_feature_from_laser(scenario_augmented.compressed_frame_laser_data[0], True)
+        points_xyz_list.append(points_xyz.numpy())
+        points_xyz_list.append(points_xyz_return2.numpy())
+        points_feature_list.append(points_feature.numpy())
+        points_feature_list.append(points_feature_return2.numpy())
         info['frame_points_xyz'] = np.concatenate(points_xyz_list, axis=0)
         info['frame_points_feature'] = np.concatenate(points_feature_list, axis=0)
 
