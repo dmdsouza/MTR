@@ -188,7 +188,7 @@ class MTREncoder(nn.Module):
         lidar_data_repeat = (lidar_data.unsqueeze(0).repeat(obj_trajs_in.shape[0], 1, 1, 1)).to(torch.float32)
         print(f"shape of repeated lidar data {lidar_data_repeat.shape}")
         print(f"obj_mask shape {obj_trajs_mask.shape}")
-        lidar_mask = torch.ones(lidar_data_repeat.shape[:3], dtype=torch.bool)
+        lidar_mask = torch.ones(lidar_data_repeat.shape[:], dtype=torch.bool)
         print(f"lidar mask shape {lidar_mask.shape}")
         print(f"lidar repeated type {lidar_data_repeat.dtype}")
         print(f"lidar  type {lidar_data.dtype}")
