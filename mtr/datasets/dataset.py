@@ -72,8 +72,8 @@ class DatasetTemplate(torch_data.Dataset):
             if key in ['obj_trajs', 'obj_trajs_mask', 'map_polylines', 'map_polylines_mask', 'map_polylines_center',
                 'obj_trajs_pos', 'obj_trajs_last_pos', 'obj_trajs_future_state', 'obj_trajs_future_mask', 'frame_points_feature']:
                 val_list = [torch.from_numpy(x) for x in val_list]
-                for x in val_list:
-                    print(f"shape {x.shape}")
+                # for x in val_list:
+                #     print(f"shape {x.shape}")
                 input_dict[key] = common_utils.merge_batch_by_padding_2nd_dim(val_list)
             elif key in ['scenario_id', 'obj_types', 'obj_ids', 'center_objects_type', 'center_objects_id']:
                 input_dict[key] = np.concatenate(val_list, axis=0)

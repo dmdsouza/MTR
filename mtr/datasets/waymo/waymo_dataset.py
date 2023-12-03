@@ -93,8 +93,8 @@ class WaymoDataset(DatasetTemplate):
         
         frame_points_feature_repeat = np.repeat(frame_points_feature[np.newaxis, ...], 11, axis=0)
 
-        print(f"normal shape {frame_points_feature.shape}")
-        print(f"repeated shape {frame_points_feature_repeat.shape}")
+        # print(f"normal shape {frame_points_feature.shape}")
+        # print(f"repeated shape {frame_points_feature_repeat.shape}")
         
         # print(f"frame points xyz {frame_points_xyz.shape}")
         # print(f"frame_points_features {frame_points_feature.shape}")
