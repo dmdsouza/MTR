@@ -43,7 +43,9 @@ class PointNetPolylineEncoder(nn.Module):
 
         # pre-mlp
         polylines_feature_valid = self.pre_mlps(polylines[polylines_mask])  # (N, C)
+        print(f"poly feature v shape {polylines_feature_valid.shape}")
         polylines_feature = polylines.new_zeros(batch_size, num_polylines,  num_points_each_polylines, polylines_feature_valid.shape[-1])
+        print(f"poly feature shape {polylines_feature.shape}")
         polylines_feature[polylines_mask] = polylines_feature_valid
 
         # get global feature
@@ -52,7 +54,9 @@ class PointNetPolylineEncoder(nn.Module):
 
         # mlp
         polylines_feature_valid = self.mlps(polylines_feature[polylines_mask])
+        print(f"poly feature v shape {polylines_feature_valid.shape}")
         feature_buffers = polylines_feature.new_zeros(batch_size, num_polylines, num_points_each_polylines, polylines_feature_valid.shape[-1])
+        print(f"poly feature v shape {feature_buffers.shape}")
         feature_buffers[polylines_mask] = polylines_feature_valid
 
         # max-pooling
