@@ -181,15 +181,15 @@ class MTREncoder(nn.Module):
 
         # apply polyline encoder
         obj_trajs_in = torch.cat((obj_trajs, obj_trajs_mask[:, :, :, None].type_as(obj_trajs)), dim=-1)
-        # print(f"shape of polyline encoder {obj_trajs_in.shape}")
-        # print(f"shape of lidar data {lidar_data.shape}")
+        print(f"shape of polyline encoder {obj_trajs_in.shape}")
+        print(f"shape of lidar data {lidar_data.shape}")
         lidar_data_repeat = (lidar_data.unsqueeze(0).repeat(obj_trajs_in.shape[0], 1, 1, 1)).to(torch.float32)
-        # print(f"shape of repeated lidar data {lidar_data_repeat.shape}")
-        # print(f"obj_mask shape {obj_trajs_mask.shape}")
+        print(f"shape of repeated lidar data {lidar_data_repeat.shape}")
+        print(f"obj_mask shape {obj_trajs_mask.shape}")
         lidar_mask = torch.ones(lidar_data_repeat.shape[:3], dtype=torch.bool).cuda()
-        # print(f"lidar mask shape {lidar_mask.shape}")
-        # print(f"lidar repeated type {lidar_data_repeat.dtype}")
-        # print(f"lidar  type {lidar_data.dtype}")
+        print(f"lidar mask shape {lidar_mask.shape}")
+        print(f"lidar repeated type {lidar_data_repeat.dtype}")
+        print(f"lidar  type {lidar_data.dtype}")
         
         obj_polylines_feature = self.agent_polyline_encoder(obj_trajs_in, obj_trajs_mask) 
         lidar_polylines_feature = self.lidar_poly_encoder(lidar_data_repeat, lidar_mask) # (num_center_objects, num_objects, C)
