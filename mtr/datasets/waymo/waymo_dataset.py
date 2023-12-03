@@ -90,6 +90,8 @@ class WaymoDataset(DatasetTemplate):
         frame_points_xyz = np.array(info['frame_points_xyz'])
         frame_points_feature = np.array(info['frame_points_feature']) 
         frame_points_feature_repeat = np.repeat(frame_points_feature, 11, axis=0)
+        print(f"repeated shape {frame_points_feature_repeat.shape}")
+        print(f"obj_trajs shape {obj_trajs_data.shape}")
         # print(f"frame points xyz {frame_points_xyz.shape}")
         # print(f"frame_points_features {frame_points_feature.shape}")
         # print(len(frame_points_xyz), len(frame_points_xyz[0]))
@@ -118,7 +120,7 @@ class WaymoDataset(DatasetTemplate):
             track_index_to_predict=track_index_to_predict, sdc_track_index=sdc_track_index,
             timestamps=timestamps, obj_types=obj_types, obj_ids=obj_ids
         )
-
+        
         ret_dict = {
             'scenario_id': np.array([scene_id] * len(track_index_to_predict)),
             'obj_trajs': obj_trajs_data,
