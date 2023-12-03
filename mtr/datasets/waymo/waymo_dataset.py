@@ -124,7 +124,7 @@ class WaymoDataset(DatasetTemplate):
             track_index_to_predict=track_index_to_predict, sdc_track_index=sdc_track_index,
             timestamps=timestamps, obj_types=obj_types, obj_ids=obj_ids
         )
-        print(f"obj_trajs shape {obj_trajs_data.shape}")
+        # print(f"obj_trajs shape {obj_trajs_data.shape}")
         ret_dict = {
             'scenario_id': np.array([scene_id] * len(track_index_to_predict)),
             'obj_trajs': obj_trajs_data,
