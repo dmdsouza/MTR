@@ -89,7 +89,7 @@ class WaymoDataset(DatasetTemplate):
         #lidar data
         frame_points_xyz = np.array(info['frame_points_xyz'])
         frame_points_feature = np.array(info['frame_points_feature']) 
-        frame_points_feature_repeat = np.repeat(frame_points_feature[:, :, np.newaxis], 11, axis=2)
+        frame_points_feature_repeat = np.array[info['frame_points_feature']]*11
         # frame_points_feature_repeat = np.repeat(frame_points_feature, 11, axis=0)
         print(f"repeated shape {frame_points_feature_repeat.shape}")
         
