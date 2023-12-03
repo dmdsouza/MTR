@@ -87,8 +87,8 @@ class WaymoDataset(DatasetTemplate):
         timestamps = np.array(info['timestamps_seconds'][:current_time_index + 1], dtype=np.float32)
 
         #lidar data
-        frame_points_xyz = info['frame_points_xyz'] 
-        frame_points_feature = info['frame_points_feature'] 
+        frame_points_xyz = np.array(info['frame_points_xyz'])
+        frame_points_feature = np.array(info['frame_points_feature']) 
         # print(len(frame_points_xyz), len(frame_points_xyz[0]))
         # print(len(frame_points_feature))
 
