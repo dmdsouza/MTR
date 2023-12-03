@@ -15,8 +15,8 @@ class LidarEncoder(nn.Module):
             in_channels=in_channels,
             hidden_dim=hidden_dim,
             num_layers=3,  # Adjust based on your config
-            num_pre_layers=1,  # Adjust based on your config
-            out_channels=None  # You can set this if needed
+            num_pre_layers=3,  # Adjust based on your config
+            out_channels=256  # You can set this if needed
         )
 
     def forward(self, lidar_input):
