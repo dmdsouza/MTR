@@ -184,7 +184,9 @@ class MTREncoder(nn.Module):
         lidar_features = self.lidar_poly_encoder(lidar_data_repeat)
         obj_polylines_feature = self.agent_polyline_encoder(obj_trajs_in, obj_trajs_mask)  # (num_center_objects, num_objects, C)
         map_polylines_feature = self.map_polyline_encoder(map_polylines, map_polylines_mask)  # (num_center_objects, num_polylines, C)
-        lidar_polyline_feature = self.lidar_polyline_encoder(lidar_data_repeat)
+        lidar_mask = torch.ones(lidar_data_repeat.shape[:2], dtype=torch.bool)
+        print(f"lidar mask shape {lidar_mask.shape}")
+        lidar_polyline_feature = self.lidar_polyline_encoder(lidar_data_repeat, lidar_mask)
         print(f"shape of obj_polylines_feature {obj_polylines_feature.shape}")
         print(f"shape of map_polylines_feature {map_polylines_feature.shape}")
 
