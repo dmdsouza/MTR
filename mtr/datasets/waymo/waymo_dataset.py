@@ -89,6 +89,7 @@ class WaymoDataset(DatasetTemplate):
         #lidar data
         frame_points_xyz = np.array(info['frame_points_xyz'])
         frame_points_feature = np.array(info['frame_points_feature']) 
+        frame_points_feature_repeat = np.repeat(frame_points_feature, 11, axis=0)
         # print(f"frame points xyz {frame_points_xyz.shape}")
         # print(f"frame_points_features {frame_points_feature.shape}")
         # print(len(frame_points_xyz), len(frame_points_xyz[0]))
@@ -140,7 +141,7 @@ class WaymoDataset(DatasetTemplate):
             'center_gt_trajs_src': obj_trajs_full[track_index_to_predict],
 
             'frame_points_xyz': frame_points_xyz,
-            'frame_points_feature': frame_points_feature
+            'frame_points_feature': frame_points_feature_repeat
         }
 
         if not self.dataset_cfg.get('WITHOUT_HDMAP', False):
