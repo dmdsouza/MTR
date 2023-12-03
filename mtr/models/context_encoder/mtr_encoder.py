@@ -51,7 +51,7 @@ class MTREncoder(nn.Module):
             out_channels=512
         )
 
-        self.lidar_polyline_encoder = lidar_encoder.LidarEncoder()
+        # self.lidar_polyline_encoder = lidar_encoder.LidarEncoder()
 
         # build transformer encoder layers
         self.use_local_attn = self.model_cfg.get('USE_LOCAL_ATTN', False)
