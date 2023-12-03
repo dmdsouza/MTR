@@ -1,37 +1,69 @@
+# Motion Transformer (MTR): https://arxiv.org/abs/2209.13508
+# Published at NeurIPS 2022
+# Written by Shaoshuai Shi 
+# All Rights Reserved
+
+
 import torch
 import torch.nn as nn
-# from .utils import common_layers
-from mtr.models.utils import polyline_encoder
-# from polyline_encoder import PointNetPolylineEncoder
+from ..utils import common_layers
+
 
 class LidarEncoder(nn.Module):
-    def __init__(self):
+    def __init__(self, in_channels, hidden_dim, num_layers=3, num_pre_layers=1, out_channels=None):
         super().__init__()
-        in_channels = 3
-        hidden_dim = 256  
-
-        # Initialize PointNetPolylineEncoder
-        self.pointnet_encoder = polyline_encoder.PointNetPolylineEncoder(
-            in_channels=in_channels,
-            hidden_dim=hidden_dim,
-            num_layers=3,  # Adjust based on your config
-            num_pre_layers=3,  # Adjust based on your config
-            out_channels=256  # You can set this if needed
+        self.pre_mlps = common_layers.build_mlps(
+            c_in=in_channels,
+            mlp_channels=[hidden_dim] * num_pre_layers,
+            ret_before_act=False
         )
-
-    def forward(self, lidar_input):
-        # Preprocess lidar_input to create polylines (reshape, sample points, etc.)
-        # lidar_input shape: (batch_size, num_points, num_features)
-        # Create polylines based on the provided configuration
+        self.mlps = common_layers.build_mlps(
+            c_in=hidden_dim * 2,
+            mlp_channels=[hidden_dim] * (num_layers - num_pre_layers),
+            ret_before_act=False
+        )
         
-        # Assuming polylines is the processed representation of lidar_input
-        # polylines = ...  # Process lidar_input to obtain polylines
+        if out_channels is not None:
+            self.out_mlps = common_layers.build_mlps(
+                c_in=hidden_dim, mlp_channels=[hidden_dim, out_channels], 
+                ret_before_act=True, without_norm=True
+            )
+        else:
+            self.out_mlps = None 
 
-        # Generate a mask to indicate valid points in the polylines
-        polylines_mask = torch.ones_like(lidar_input, dtype=torch.bool)  # Example mask (all points are valid)
+    def forward(self, polylines, polylines_mask):
+        """
+        Args:
+            polylines (batch_size, num_polylines, num_points_each_polylines, C):
+            polylines_mask (batch_size, num_polylines, num_points_each_polylines):
 
-        # Pass the polylines and mask through the PointNetPolylineEncoder
-        encoded_features = self.pointnet_encoder(lidar_input, polylines_mask)
+        Returns:
+        """
+        batch_size, num_polylines,  num_points_each_polylines, C = polylines.shape
 
-        return encoded_features
+        # pre-mlp
+        polylines_feature_valid = self.pre_mlps(polylines[polylines_mask])  # (N, C)
+        polylines_feature = polylines.new_zeros(batch_size, num_polylines,  num_points_each_polylines, polylines_feature_valid.shape[-1])
+        polylines_feature[polylines_mask] = polylines_feature_valid
 
+        # get global feature
+        pooled_feature = polylines_feature.max(dim=2)[0]
+        polylines_feature = torch.cat((polylines_feature, pooled_feature[:, :, None, :].repeat(1, 1, num_points_each_polylines, 1)), dim=-1)
+
+        # mlp
+        polylines_feature_valid = self.mlps(polylines_feature[polylines_mask])
+        feature_buffers = polylines_feature.new_zeros(batch_size, num_polylines, num_points_each_polylines, polylines_feature_valid.shape[-1])
+        feature_buffers[polylines_mask] = polylines_feature_valid
+
+        # max-pooling
+        feature_buffers = feature_buffers.max(dim=2)[0]  # (batch_size, num_polylines, C)
+        
+        # out-mlp 
+        if self.out_mlps is not None:
+            valid_mask = (polylines_mask.sum(dim=-1) > 0)
+            print(feature_buffers[valid_mask].shape)
+            print(self.out_mlps)
+            feature_buffers_valid = self.out_mlps(feature_buffers[valid_mask])  # (N, C)
+            feature_buffers = feature_buffers.new_zeros(batch_size, num_polylines, feature_buffers_valid.shape[-1])
+            feature_buffers[valid_mask] = feature_buffers_valid
+        return feature_buffers
