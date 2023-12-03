@@ -18,7 +18,7 @@ class LidarEncoder(nn.Module):
             ret_before_act=False
         )
         self.mlps = common_layers.build_mlps(
-            c_in=hidden_dim,
+            c_in=hidden_dim * 2,
             mlp_channels=[hidden_dim] * (num_layers - num_pre_layers),
             ret_before_act=False
         )
