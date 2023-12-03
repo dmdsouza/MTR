@@ -185,7 +185,7 @@ class MTREncoder(nn.Module):
         print(f"shape of polyline encoder {obj_trajs_in.shape}")
         print(f"shape of lidar data {lidar_data.shape}")
         lidar_data_repeat = (lidar_data.unsqueeze(0).repeat(obj_trajs_in.shape[0], 1, 1, 1)).to(torch.float32)
-        lidar_pos = torch.max(lidar_data_repeat, axis=1, keepdims=False)
+        lidar_pos, _ = torch.max(lidar_data_repeat, axis=1, keepdims=False)
         print(f"shape of repeated lidar data {lidar_data_repeat.shape}")
         print(f"obj_mask shape {obj_trajs_mask.shape}")
         print(f"lidar_pos shape {lidar_pos.shape}")
