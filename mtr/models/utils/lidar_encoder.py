@@ -1,7 +1,8 @@
 import torch
 import torch.nn as nn
 # from .utils import common_layers
-from polyline_encoder import PointNetPolylineEncoder
+from mtr.models.utils import polyline_encoder
+# from polyline_encoder import PointNetPolylineEncoder
 
 class LidarEncoder(nn.Module):
     def __init__(self):
@@ -10,7 +11,7 @@ class LidarEncoder(nn.Module):
         hidden_dim = 256  
 
         # Initialize PointNetPolylineEncoder
-        self.pointnet_encoder = PointNetPolylineEncoder(
+        self.pointnet_encoder = polyline_encoder.PointNetPolylineEncoder(
             in_channels=in_channels,
             hidden_dim=hidden_dim,
             num_layers=3,  # Adjust based on your config
