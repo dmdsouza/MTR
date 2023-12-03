@@ -192,8 +192,10 @@ class MTREncoder(nn.Module):
         print(f"lidar mask shape {lidar_mask.shape}")
         print(f"lidar repeated type {lidar_data_repeat.dtype}")
         print(f"lidar  type {lidar_data.dtype}")
-        lidar_features = self.lidar_poly_encoder(lidar_data_repeat, lidar_mask)
-        obj_polylines_feature = self.agent_polyline_encoder(obj_trajs_in, obj_trajs_mask)  # (num_center_objects, num_objects, C)
+        
+        obj_polylines_feature = self.agent_polyline_encoder(obj_trajs_in, obj_trajs_mask) 
+        print("lidar feature extractor")
+        lidar_features = self.lidar_poly_encoder(lidar_data_repeat, lidar_mask) # (num_center_objects, num_objects, C)
         map_polylines_feature = self.map_polyline_encoder(map_polylines, map_polylines_mask)  # (num_center_objects, num_polylines, C)
         
         # lidar_polyline_feature = self.lidar_polyline_encoder(lidar_data_repeat)
