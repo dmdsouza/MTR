@@ -36,6 +36,14 @@ class MTREncoder(nn.Module):
             out_channels=self.model_cfg.D_MODEL
         )
 
+        self.lidar_poly_encoder = self.build_polyline_encoder(
+            in_channels=3,
+            hidden_dim=256,
+            num_layers=3,
+            num_pre_layers=3,
+            out_channels=self.model_cfg.D_MODEL
+        )
+
         self.lidar_polyline_encoder = lidar_encoder.LidarEncoder()
 
         # build transformer encoder layers
@@ -172,6 +180,8 @@ class MTREncoder(nn.Module):
         print(f"shape of lidar data {lidar_data.shape}")
         lidar_data_repeat = lidar_data.unsqueeze(0).repeat(obj_trajs_in.shape[0], 1, 1, 1)
         print(f"shape of lidar data {lidar_data_repeat.shape}")
+        print(f"obj_mask shape {obj_trajs_mask.shape}")
+        lidar_features = self.lidar_poly_encoder(lidar_data_repeat)
         obj_polylines_feature = self.agent_polyline_encoder(obj_trajs_in, obj_trajs_mask)  # (num_center_objects, num_objects, C)
         map_polylines_feature = self.map_polyline_encoder(map_polylines, map_polylines_mask)  # (num_center_objects, num_polylines, C)
         lidar_polyline_feature = self.lidar_polyline_encoder(lidar_data_repeat)
