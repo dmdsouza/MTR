@@ -187,7 +187,7 @@ class MTREncoder(nn.Module):
         obj_polylines_feature = self.agent_polyline_encoder(obj_trajs_in, obj_trajs_mask)  # (num_center_objects, num_objects, C)
         map_polylines_feature = self.map_polyline_encoder(map_polylines, map_polylines_mask)  # (num_center_objects, num_polylines, C)
         
-        lidar_polyline_feature = self.lidar_polyline_encoder(lidar_data_repeat)
+        # lidar_polyline_feature = self.lidar_polyline_encoder(lidar_data_repeat)
         print(f"shape of obj_polylines_feature {obj_polylines_feature.shape}")
         print(f"shape of map_polylines_feature {map_polylines_feature.shape}")
 

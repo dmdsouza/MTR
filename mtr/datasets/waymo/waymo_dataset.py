@@ -89,9 +89,19 @@ class WaymoDataset(DatasetTemplate):
         #lidar data
         frame_points_xyz = np.array(info['frame_points_xyz'])
         frame_points_feature = np.array(info['frame_points_feature']) 
+        downsampled = frame_points_feature[::10]
+        print(downsampled.shape)
+        
+        downsampled = np.expand_dims(downsampled, axis=0)
+        print(downsampled.shape)
+        # downsampled_count = int(0.1 * len(data))
+
+        # Downsampling to 10% of the original data using random sampling
+        # downsampled_data = data[np.random.choice(data.shape[0], downsampled_count, replace=False)]
+
         # frame_points_feature_repeat = np.array[info['frame_points_feature']]*11
         
-        frame_points_feature_repeat = np.repeat(frame_points_feature[np.newaxis, ...], 11, axis=0)
+        # frame_points_feature_repeat = np.repeat(frame_points_feature[np.newaxis, ...], 11, axis=0)
 
         # print(f"normal shape {frame_points_feature.shape}")
         # print(f"repeated shape {frame_points_feature_repeat.shape}")
@@ -147,7 +157,7 @@ class WaymoDataset(DatasetTemplate):
             'center_gt_trajs_src': obj_trajs_full[track_index_to_predict],
 
             'frame_points_xyz': frame_points_xyz,
-            'frame_points_feature': frame_points_feature_repeat
+            'frame_points_feature': downsampled
         }
 
         if not self.dataset_cfg.get('WITHOUT_HDMAP', False):
