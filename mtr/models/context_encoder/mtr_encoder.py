@@ -196,12 +196,12 @@ class MTREncoder(nn.Module):
         map_polylines_feature = self.map_polyline_encoder(map_polylines, map_polylines_mask)  # (num_center_objects, num_polylines, C)
         
         # lidar_polyline_feature = self.lidar_polyline_encoder(lidar_data_repeat)
-        # print(f"shape of obj_polylines_feature {obj_polylines_feature.shape}")
-        # print(f"shape of map_polylines_feature {map_polylines_feature.shape}")
-        # print(f"shape of lidar_features {lidar_polylines_features.shape}")
+        print(f"shape of obj_polylines_feature {obj_polylines_feature.shape}")
+        print(f"shape of map_polylines_feature {map_polylines_feature.shape}")
+        print(f"shape of lidar_features {lidar_polylines_feature.shape}")
 
-        # print(f"obj_trajs_last_pos {obj_trajs_last_pos.shape}")
-        # print(f"map_polylines_center {map_polylines_center.shape}")
+        print(f"obj_trajs_last_pos {obj_trajs_last_pos.shape}")
+        print(f"map_polylines_center {map_polylines_center.shape}")
         batch_size_lidar, num_lidar, output_lidar = lidar_polylines_feature.shape
         # apply self-attn
         obj_valid_mask = (obj_trajs_mask.sum(dim=-1) > 0)  # (num_center_objects, num_objects)
