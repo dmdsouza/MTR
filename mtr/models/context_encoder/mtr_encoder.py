@@ -174,6 +174,7 @@ class MTREncoder(nn.Module):
         track_index_to_predict = input_dict['track_index_to_predict']
         lidar_data = input_dict['frame_points_feature'].cuda()
 
+
         assert obj_trajs_mask.dtype == torch.bool and map_polylines_mask.dtype == torch.bool
 
         num_center_objects, num_objects, num_timestamps, _ = obj_trajs.shape
@@ -184,8 +185,10 @@ class MTREncoder(nn.Module):
         print(f"shape of polyline encoder {obj_trajs_in.shape}")
         print(f"shape of lidar data {lidar_data.shape}")
         lidar_data_repeat = (lidar_data.unsqueeze(0).repeat(obj_trajs_in.shape[0], 1, 1, 1)).to(torch.float32)
+        lidar_pos = torch.max(lidar_data_repeat, axis=1, keepdims=True).squeeze(1)
         print(f"shape of repeated lidar data {lidar_data_repeat.shape}")
         print(f"obj_mask shape {obj_trajs_mask.shape}")
+        print(f"lidar_pos shape {lidar_pos.shape}")
         lidar_mask = torch.ones(lidar_data_repeat.shape[:3], dtype=torch.bool).cuda()
         print(f"lidar mask shape {lidar_mask.shape}")
         print(f"lidar repeated type {lidar_data_repeat.dtype}")
@@ -210,7 +213,7 @@ class MTREncoder(nn.Module):
 
         global_token_feature = torch.cat((obj_polylines_feature, map_polylines_feature, lidar_polylines_feature), dim=1) 
         global_token_mask = torch.cat((obj_valid_mask, map_valid_mask, lidar_valid_mask), dim=1) 
-        global_token_pos = torch.cat((obj_trajs_last_pos, map_polylines_center, lidar_polylines_feature), dim=1) 
+        global_token_pos = torch.cat((obj_trajs_last_pos, map_polylines_center, lidar_pos), dim=1) 
 
         if self.use_local_attn:
             global_token_feature = self.apply_local_attn(
