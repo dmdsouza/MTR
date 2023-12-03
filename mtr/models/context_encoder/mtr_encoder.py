@@ -11,6 +11,7 @@ import torch.nn as nn
 
 from mtr.models.utils.transformer import transformer_encoder_layer, position_encoding_utils
 from mtr.models.utils import polyline_encoder
+from mtr.models.utils import lidar_encoder
 from mtr.utils import common_utils
 from mtr.ops.knn import knn_utils
 
@@ -34,6 +35,8 @@ class MTREncoder(nn.Module):
             num_pre_layers=self.model_cfg.NUM_LAYER_IN_PRE_MLP_MAP,
             out_channels=self.model_cfg.D_MODEL
         )
+
+        self.lidar_polyline_encoder = lidar_encoder.LidarEncoder()
 
         # build transformer encoder layers
         self.use_local_attn = self.model_cfg.get('USE_LOCAL_ATTN', False)
@@ -156,6 +159,7 @@ class MTREncoder(nn.Module):
         obj_trajs_last_pos = input_dict['obj_trajs_last_pos'].cuda() 
         map_polylines_center = input_dict['map_polylines_center'].cuda() 
         track_index_to_predict = input_dict['track_index_to_predict']
+        lidar_data = input_dict['frame_points_feature'].cuda()
 
         assert obj_trajs_mask.dtype == torch.bool and map_polylines_mask.dtype == torch.bool
 
@@ -164,9 +168,10 @@ class MTREncoder(nn.Module):
 
         # apply polyline encoder
         obj_trajs_in = torch.cat((obj_trajs, obj_trajs_mask[:, :, :, None].type_as(obj_trajs)), dim=-1)
-        print(f"shape of polyline encoder {obj_trajs_in.shape}")
+        # print(f"shape of polyline encoder {obj_trajs_in.shape}")
         obj_polylines_feature = self.agent_polyline_encoder(obj_trajs_in, obj_trajs_mask)  # (num_center_objects, num_objects, C)
         map_polylines_feature = self.map_polyline_encoder(map_polylines, map_polylines_mask)  # (num_center_objects, num_polylines, C)
+        lidar_polyline_feature = self.lidar_polyline_encoder(lidar_data)
         print(f"shape of obj_polylines_feature {obj_polylines_feature.shape}")
         print(f"shape of map_polylines_feature {map_polylines_feature.shape}")
 
