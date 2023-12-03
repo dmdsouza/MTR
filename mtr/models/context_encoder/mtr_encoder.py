@@ -203,13 +203,21 @@ class MTREncoder(nn.Module):
         print(f"shape of map_polylines_feature {map_polylines_feature.shape}")
         print(f"shape of lidar_features {lidar_polylines_feature.shape}")
 
+        
+
+        
         print(f"obj_trajs_last_pos {obj_trajs_last_pos.shape}")
+        print(f"lidar_pos {lidar_pos.shape}")
         print(f"map_polylines_center {map_polylines_center.shape}")
         batch_size_lidar, num_lidar, output_lidar = lidar_polylines_feature.shape
         # apply self-attn
         obj_valid_mask = (obj_trajs_mask.sum(dim=-1) > 0)  # (num_center_objects, num_objects)
         map_valid_mask = (map_polylines_mask.sum(dim=-1) > 0)  # (num_center_objects, num_polylines)
         lidar_valid_mask = (lidar_mask.sum(dim=-1) > 0)
+
+        print(f"shape of obj_polylines_feature {obj_valid_mask.shape}")
+        print(f"shape of map_polylines_feature {map_valid_mask.shape}")
+        print(f"shape of lidar_features {lidar_valid_mask.shape}")
 
         global_token_feature = torch.cat((obj_polylines_feature, map_polylines_feature, lidar_polylines_feature), dim=1) 
         global_token_mask = torch.cat((obj_valid_mask, map_valid_mask, lidar_valid_mask), dim=1) 
