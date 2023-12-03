@@ -167,6 +167,8 @@ class MTREncoder(nn.Module):
         print(f"shape of polyline encoder {obj_trajs_in.shape}")
         obj_polylines_feature = self.agent_polyline_encoder(obj_trajs_in, obj_trajs_mask)  # (num_center_objects, num_objects, C)
         map_polylines_feature = self.map_polyline_encoder(map_polylines, map_polylines_mask)  # (num_center_objects, num_polylines, C)
+        print(f"shape of obj_polylines_feature {obj_polylines_feature.shape}")
+        print(f"shape of map_polylines_feature {map_polylines_feature.shape}")
 
         # apply self-attn
         obj_valid_mask = (obj_trajs_mask.sum(dim=-1) > 0)  # (num_center_objects, num_objects)
