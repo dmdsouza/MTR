@@ -45,7 +45,7 @@ class MTREncoder(nn.Module):
         )
         self.build_polyline_encoder(
             in_channels=3,
-            hidden_dim=256,
+            hidden_dim=512,
             num_layers=3,
             num_pre_layers=3,
             out_channels=512
