@@ -36,12 +36,19 @@ class MTREncoder(nn.Module):
             out_channels=self.model_cfg.D_MODEL
         )
 
-        self.lidar_poly_encoder = self.build_polyline_encoder(
+        self.lidar_poly_encoder = lidar_encoder.LidarEncoder(
             in_channels=3,
             hidden_dim=256,
             num_layers=3,
             num_pre_layers=3,
             out_channels=self.model_cfg.D_MODEL
+        )
+        self.build_polyline_encoder(
+            in_channels=3,
+            hidden_dim=256,
+            num_layers=3,
+            num_pre_layers=3,
+            out_channels=512
         )
 
         self.lidar_polyline_encoder = lidar_encoder.LidarEncoder()
