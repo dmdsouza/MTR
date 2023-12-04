@@ -63,8 +63,8 @@ class PointNetPolylineEncoder(nn.Module):
         # out-mlp 
         if self.out_mlps is not None:
             valid_mask = (polylines_mask.sum(dim=-1) > 0)
-            print(feature_buffers[valid_mask].shape)
-            print(self.out_mlps)
+            # print(feature_buffers[valid_mask].shape)
+            # print(self.out_mlps)
             feature_buffers_valid = self.out_mlps(feature_buffers[valid_mask])  # (N, C)
             feature_buffers = feature_buffers.new_zeros(batch_size, num_polylines, feature_buffers_valid.shape[-1])
             feature_buffers[valid_mask] = feature_buffers_valid
