@@ -252,5 +252,6 @@ class MTREncoder(nn.Module):
         batch_dict['map_mask'] = map_valid_mask
         batch_dict['obj_pos'] = obj_trajs_last_pos
         batch_dict['map_pos'] = map_polylines_center
+        batch_dict['lidar_feature'] = lidar_polylines_feature
 
         return batch_dict
