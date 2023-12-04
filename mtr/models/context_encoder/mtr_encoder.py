@@ -234,8 +234,8 @@ class MTREncoder(nn.Module):
             )
         # start = num_objects
         obj_polylines_feature = global_token_feature[:, :num_objects]
-        map_polylines_feature = global_token_feature[:, num_objects:num_objects+num_lidar]
-        lidar_polylines_feature = global_token_feature[:, num_objects+num_lidar:]
+        map_polylines_feature = global_token_feature[:, num_objects:num_objects+num_polylines]
+        lidar_polylines_feature = global_token_feature[:, num_objects+num_polylines:]
         print(f"shape of obj_polylines_feature {obj_polylines_feature.shape}")
         print(f"shape of map_polylines_feature {map_polylines_feature.shape}")
         print(f"shape of lidar_features {lidar_polylines_feature.shape}")
