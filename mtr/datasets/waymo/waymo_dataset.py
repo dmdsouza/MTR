@@ -90,10 +90,10 @@ class WaymoDataset(DatasetTemplate):
         frame_points_xyz = np.array(info['frame_points_xyz'])
         frame_points_feature = np.array(info['frame_points_feature']) 
         downsampled = frame_points_feature[::100]
-        print(downsampled.shape)
+        # print(downsampled.shape)
         
         downsampled = np.expand_dims(downsampled, axis=0)
-        print(downsampled.shape)
+        # print(downsampled.shape)
         # downsampled_count = int(0.1 * len(data))
 
         # Downsampling to 10% of the original data using random sampling
