@@ -232,10 +232,10 @@ class MTREncoder(nn.Module):
             global_token_feature = self.apply_global_attn(
                 x=global_token_feature, x_mask=global_token_mask, x_pos=global_token_pos
             )
-
-        obj_polylines_feature = global_token_feature[:, :num_objects]
-        map_polylines_feature = global_token_feature[:, num_objects:num_lidar]
-        lidar_polylines_feature = global_token_feature[:, num_lidar:]
+        start = num_objects
+        obj_polylines_feature = global_token_feature[:, :start]
+        map_polylines_feature = global_token_feature[:, start:start+num_lidar]
+        lidar_polylines_feature = global_token_feature[:, start+num_lidar:]
         assert map_polylines_feature.shape[1] == num_polylines
 
         # organize return features
