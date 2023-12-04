@@ -222,7 +222,7 @@ class MTREncoder(nn.Module):
         # global_token_feature = torch.cat((obj_polylines_feature, map_polylines_feature, lidar_polylines_feature), dim=1) 
         # global_token_mask = torch.cat((obj_valid_mask, map_valid_mask, lidar_valid_mask), dim=1) 
         # global_token_pos = torch.cat((obj_trajs_last_pos, map_polylines_center, lidar_pos), dim=1) 
-        ure = torch.cat((obj_polylines_feature, map_polylines_feature), dim=1) 
+        global_token_feature = torch.cat((obj_polylines_feature, map_polylines_feature), dim=1) 
         global_token_mask = torch.cat((obj_valid_mask, map_valid_mask), dim=1) 
         global_token_pos = torch.cat((obj_trajs_last_pos, map_polylines_center), dim=1) 
 
